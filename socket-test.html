@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Socket.IO Live Demo Client</title>
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; }
+    input, button { padding: 8px 12px; margin: 4px 0; }
+    input { width: 70%; }
+    pre { background: #111; color: #0f0; padding: 1rem; border-radius: 6px; min-height: 220px; overflow: auto; }
+  </style>
+</head>
+<body>
+  <h2>E-Commerce Real-Time Notifications (Socket.IO Demo)</h2>
+  <p>Paste a valid JWT Access Token (from <code>POST /api/auth/login</code>) and click Connect:</p>
+  <input id="token" type="text" placeholder="Paste JWT accessToken here..." />
+  <button onclick="connectSocket()">Connect</button>
+  <pre id="log">Waiting to connect...
+</pre>
+
+  <script>
+    let socket;
+    const log = (msg) => {
+      const el = document.getElementById('log');
+      el.textContent += `[${new Date().toLocaleTimeString()}] ${msg}
+`;
+    };
+
+    function connectSocket() {
+      const token = document.getElementById('token').value.trim();
+      if (socket) socket.disconnect();
+
+      socket = io('http://localhost:5000', { auth: { token } });
+
+      socket.on('connect', () => log('Socket connected: ' + socket.id));
+      socket.on('connect_error', (err) => log('Connection error: ' + err.message));
+      socket.on('connected', (data) => log('Server greeting: ' + JSON.stringify(data)));
+      socket.on('order:created', (data) => log('EVENT order:created -> ' + JSON.stringify(data)));
+      socket.on('order:statusChanged', (data) => log('EVENT order:statusChanged -> ' + JSON.stringify(data)));
+      socket.on('order:cancelled', (data) => log('EVENT order:cancelled -> ' + JSON.stringify(data)));
+      socket.on('seller:newOrder', (data) => log('EVENT seller:newOrder -> ' + JSON.stringify(data)));
+      socket.on('admin:newOrder', (data) => log('EVENT admin:newOrder -> ' + JSON.stringify(data)));
+      socket.on('inventory:lowStockAlert', (data) => log('EVENT inventory:lowStockAlert -> ' + JSON.stringify(data)));
+    }
+  </script>
+</body>
+</html>
