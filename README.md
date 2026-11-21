@@ -184,5 +184,4 @@ ecommerce-inventory-backend-capstone/
 1. Import `postman/ECommerce_Capstone_API.postman_collection.json` into Postman.
 2. Run **POST Login Customer**, **POST Login Seller**, and **POST Login Admin** (test scripts automatically store tokens in collection variables).
 3. Run the remaining requests in order to verify CRUD, atomic stock deduction, RBAC (`403`), unauthenticated access (`401`), validation errors (`400`), and missing resources (`404`).
-#   e c o m m e r c e - i n v e n t o r y - b a c k e n d - c a p s t o n e  
- 
+# ecommerce-inventory-backend-capstone
